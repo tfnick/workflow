@@ -3,6 +3,9 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.neuro4j/workflow/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.neuro4j/workflow)
 
 Neuro4j Workflow.
+
+!!! Project moved to [https://github.com/eternita/workflow ] (https://github.com/eternita/workflow )
+
 ========
 Java workflow engine with Eclipse-based development environment.
 
@@ -10,7 +13,7 @@ What is new
 ## 3.5.1-TBD
 
 ## 3.4.1 - 02/19/2017
-* netflix-hystrix-adapter and [example] (https://github.com/neuro4j/workflow/tree/master/tutorials/HystrixExample)
+* netflix-hystrix-adapter and [example] (https://github.com/eternita/workflow/tree/master/tutorials/HystrixExample)
 
 [Hystrix](https://github.com/Netflix/Hystrix) is a latency and fault tolerance library designed to isolate points of access to remote systems, services and 3rd party libraries, stop cascading failure and enable resilience in complex distributed systems where failure is inevitable.
 
@@ -19,7 +22,7 @@ What is new
 * netflix-governator plugin
 
 ## 3.2.1 - 11/26/2016
-* [Parallel](https://github.com/neuro4j/workflow/tree/master/tutorials/ParallelProcessingExample) execution inside workflow
+* [Parallel](https://github.com/eternita/workflow/tree/master/tutorials/ParallelProcessingExample) execution inside workflow
 * Removed all web plugins
 
 ## 3.1.1 - 11/16/2016
@@ -40,7 +43,7 @@ The advantages of Workflows are as follows:
 
 * Asynchronous vs synchronous execution
 
-* Sequential or [Parallel](https://github.com/neuro4j/workflow/tree/master/tutorials/ParallelProcessingExample) processing inside workflow
+* Sequential or [Parallel](https://github.com/eternita/workflow/tree/master/tutorials/ParallelProcessingExample) processing inside workflow
 
 * Neuro4j Workflow has layered architecture.
  
@@ -65,16 +68,16 @@ This is HelloWorld example how to use Neuro4j Flows.
 
 Flow file org\neuro4j\example\HelloWorld.n4j:
 
-![workflow-example-higlevel](https://raw.github.com/neuro4j/workflow/master/doc/images/HelloWorld.png "HelloWorld workflow")
+![workflow-example-higlevel](https://raw.github.com/eternita/workflow/master/doc/images/HelloWorld.png "HelloWorld workflow")
 
 
 HelloWorld.java
 
-![workflow-example-higlevel](https://raw.github.com/neuro4j/workflow/master/doc/images/HelloWorldCustomBlock.png "HelloWorld workflow")
+![workflow-example-higlevel](https://raw.github.com/eternita/workflow/master/doc/images/HelloWorldCustomBlock.png "HelloWorld workflow")
 
 Following code execute flow:
 
-![workflow-example-higlevel](https://raw.github.com/neuro4j/workflow/master/doc/images/MainClass.png "HelloWorld workflow")
+![workflow-example-higlevel](https://raw.github.com/eternita/workflow/master/doc/images/MainClass.png "HelloWorld workflow")
 
 
 Online documentation how to create first application based on flow available at (http://neuro4j.org/articles/tutorial_hello_world)
@@ -108,7 +111,7 @@ or asynchronously:
     	      }
     	    }
 ```
-###Sequential vs Parallel ([example](https://github.com/neuro4j/workflow/tree/master/tutorials/ParallelProcessingExample))
+###Sequential vs Parallel ([example](https://github.com/eternita/workflow/tree/master/tutorials/ParallelProcessingExample))
 Code inside workflow can be executed in sequential or parallel way.
 By default all nodes in workflow will be processing sequentially but developers can specify parallel workflow.
  * add SwitchNode to workflow
@@ -116,7 +119,7 @@ By default all nodes in workflow will be processing sequentially but developers 
  * add a few subflows
  * add JoinNode with property Fork=true (shows like JoinNode with blue cross) (processor waits here until all subflows finished)
  Example:
-![workflow-example-parallel](https://raw.github.com/neuro4j/workflow/master/doc/images/Parallel.png "Parallel processing")
+![workflow-example-parallel](https://raw.github.com/eternita/workflow/master/doc/images/Parallel.png "Parallel processing")
 
 
 ### Loading workflow
@@ -215,7 +218,7 @@ Debuging flow
 
 Neuro4j Studio provides  plugin which allows to debug flow in visual editor.
 
-![workflow-example-higlevel](https://raw.github.com/neuro4j/workflow/master/doc/images/debug.png "Debuging workflow")
+![workflow-example-higlevel](https://raw.github.com/eternita/workflow/master/doc/images/debug.png "Debuging workflow")
 
 More information about debug plugin avaliable at http://neuro4j.org/docs/wf/flowdebugtool
 
