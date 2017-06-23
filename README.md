@@ -4,7 +4,8 @@
 
 Neuro4j Workflow.
 
-!!! Project moved to [https://github.com/eternita/workflow ] (https://github.com/eternita/workflow )
+!!! Project moved to https://github.com/eternita/workflow
+
 
 ========
 Java workflow engine with Eclipse-based development environment.
