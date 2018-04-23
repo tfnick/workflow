@@ -16,16 +16,15 @@
  */
 package org.neuro4j.workflow.node;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.neuro4j.workflow.FlowContext;
 import org.neuro4j.workflow.WorkflowRequest;
 import org.neuro4j.workflow.common.FlowExecutionException;
 import org.neuro4j.workflow.loader.f4j.SWFConstants;
+import org.neuro4j.workflow.utils.JsonUtil;
+import org.neuro4j.workflow.utils.RegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,7 +121,13 @@ public class WorkflowNode {
 
 	}
 
-	protected final void evaluateParameterValue(String source, String target, FlowContext ctx) {
+	/**
+	 * source is constant or variable expression
+	 * @param source
+	 * @param target
+	 * @param ctx
+	 */
+	public final void evaluateParameterValue(String source, String target, FlowContext ctx) {
 		Object obj = null;
 
 		// 1) if null
@@ -140,8 +145,63 @@ public class WorkflowNode {
 
 			ctx.put(target, obj);
 			return;
-		}
+			// 3) GR extend ${v1.v2}
+		} else if(source.startsWith(SWFConstants.GR_VARIABLE_SYMBOL_START)
+				&& source.endsWith(SWFConstants.GR_VARIABLE_SYMBOL_END)){
+			//${v1.v2} -> v1.v2
+			source = source.replaceFirst(SWFConstants.GR_VARIABLE_SYMBOL_START,"").replace(SWFConstants.GR_VARIABLE_SYMBOL_END,"");
+			obj = ctx.get(source);
+			ctx.put(target, obj);
+			return;
+			// 4) GR extend #{a:1,b:2}
+		} else if (source.startsWith(SWFConstants.GR_MAP_SYMBOL_START) && source.endsWith(SWFConstants.GR_MAP_SYMBOL_END)) {
+			source = source.replaceFirst(SWFConstants.GR_MAP_SYMBOL_START_REGEX, "");
 
+			List<String> variables = RegexUtil.getStringList(source,SWFConstants.GR_VARIABLE_SYMBOL_REGEX, null);
+
+			if (variables != null) {
+				for (String var : variables) {
+					String rVar = var.replaceFirst(SWFConstants.GR_VARIABLE_SYMBOL_START_REGEX,"").replace(SWFConstants.GR_VARIABLE_SYMBOL_END_REGEX,"");
+					Object val = ctx.get(rVar);
+					if (val == null) {
+						source = source.replace(var, "null");
+					} else {
+						if (val instanceof String) {
+							source = source.replace(var, "\"" + val + "\"");
+						} else {
+							source = source.replace(var, val.toString());
+						}
+					}
+
+				}
+			}
+
+			Map<String,Object> objm = JsonUtil.jsonToObject(source, HashMap.class);
+			for (Map.Entry<String,Object> entry : objm.entrySet()) {
+				String key = entry.getKey();
+				Object val = entry.getValue();
+
+				if (val instanceof String) {
+					String valExpression = val.toString();
+					if(valExpression.startsWith(SWFConstants.GR_VARIABLE_SYMBOL_START)
+							&& valExpression.endsWith(SWFConstants.GR_VARIABLE_SYMBOL_END)){
+						valExpression = valExpression.replaceFirst(SWFConstants.GR_VARIABLE_SYMBOL_START,"").replace(SWFConstants.GR_VARIABLE_SYMBOL_END,"");
+						Object objt = ctx.get(valExpression);
+
+						entry.setValue(objt);
+					}
+				}
+			}
+			ctx.put(target,objm);
+			return;
+			// 5) constants like 1 or "year" etc
+		} else{
+			obj = source;
+			ctx.put(target,obj);
+			return;
+		}
+		/*
+		//TODO remove following code
 		String[] parts = source.split("\\+");
 
 		// if concatenated string
@@ -154,11 +214,11 @@ public class WorkflowNode {
 			obj = stringValue;
 
 		} else {
+			//use v1.v2.v3 expression to get value from context
 			obj = ctx.get(source);
 		}
-
 		ctx.put(target, obj);
-
+		*/
 	}
 
 	private Object createNewInstance(String clazzName) {

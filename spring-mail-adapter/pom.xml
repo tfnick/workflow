@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.neuro4j</groupId>
-        <artifactId>workflow</artifactId>
+		<groupId>org.gr.neuro4j</groupId>
+		<artifactId>workflow</artifactId>
         <version>3.5.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>

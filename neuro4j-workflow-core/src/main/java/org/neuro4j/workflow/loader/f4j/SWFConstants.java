@@ -51,4 +51,18 @@ public class SWFConstants {
     public static final String RENDER_ENGINE_KEY = "RENDER_ENGINE_KEY";
     public static final String EndUUID = "EndUUID";
 
+
+    //吉荣数扩展对于变量的定义
+    public final static String GR_VARIABLE_SYMBOL_START = "${";
+    public final static String GR_VARIABLE_SYMBOL_START_REGEX = "\\$\\{";
+    public final static String GR_VARIABLE_SYMBOL_END = "}";
+    public final static String GR_VARIABLE_SYMBOL_END_REGEX = "}";
+    public final static String GR_VARIABLE_SYMBOL_REGEX = "\\$\\{[\\.a-zA-Z0-9]+\\}";
+
+    public final static String GR_MAP_SYMBOL_START = "#{";
+    public final static String GR_MAP_SYMBOL_START_REGEX = "#";
+    public final static String GR_MAP_SYMBOL_END = "}";
+
+    public final static String PARAM_TYPE_STRING = "java.lang.String";
+
 }

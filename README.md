@@ -11,6 +11,8 @@ Java workflow engine with Eclipse-based development environment.
 
 What is new
 ## 3.5.1-TBD
+* mvn clean install -Dmaven.test.skip=true  && mvn source:jar deploy -Dmaven.test.skip=true
+* modify input Param Mapping for GR-data
 
 ## 3.4.1 - 02/19/2017
 * netflix-hystrix-adapter and [example] (https://github.com/eternita/workflow/tree/master/tutorials/HystrixExample)

@@ -130,6 +130,7 @@ public class CustomNode extends WorkflowNode {
                     throw new FlowExecutionException("Parameter " + name + " is mandatory for " + executableClass);
                 }
             }
+            //数值常量 字符串常量 字符串（嵌套）变量 Map变量
             checkPatameterType(parameter, obj);
 
         }
