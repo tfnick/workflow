@@ -63,6 +63,10 @@ public class SWFConstants {
     public final static String GR_MAP_SYMBOL_START_REGEX = "#";
     public final static String GR_MAP_SYMBOL_END = "}";
 
+    public final static String GR_EXPRESSION_SYMBOL_START = "%{";
+    public final static String GR_EXPRESSION_SYMBOL_START_REGEX = "%\\{";
+    public final static String GR_EXPRESSION_SYMBOL_END = "}";
+
     public final static String PARAM_TYPE_STRING = "java.lang.String";
 
 }

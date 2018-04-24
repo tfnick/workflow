@@ -18,6 +18,7 @@ package org.neuro4j.workflow.node;
 
 import static org.neuro4j.workflow.loader.f4j.SWFConstants.NEXT_RELATION_NAME;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -131,7 +132,7 @@ public class CustomNode extends WorkflowNode {
                 }
             }
             //数值常量 字符串常量 字符串（嵌套）变量 Map变量
-            checkPatameterType(parameter, obj);
+            checkPatameterType(parameter, obj, ctx);
 
         }
 
@@ -168,7 +169,7 @@ public class CustomNode extends WorkflowNode {
                 }
 
             }
-            checkPatameterType(parameter, obj);
+            checkPatameterType(parameter, obj, ctx);
 
         }
 
@@ -218,7 +219,7 @@ public class CustomNode extends WorkflowNode {
      * @param obj input parameter
      * @throws FlowExecutionException in case of error
      */
-    private void checkPatameterType(ParameterDefinition parameterDefinition, Object obj) throws FlowExecutionException
+    private void checkPatameterType(ParameterDefinition parameterDefinition, Object obj, FlowContext ctx) throws FlowExecutionException
     {
         if (obj == null)
         {
@@ -241,11 +242,21 @@ public class CustomNode extends WorkflowNode {
 
         try {
             Class<?> cl = getClass().getClassLoader().loadClass(className);
-
+            /*
             if (!cl.isAssignableFrom(obj.getClass()))
             {
                 StringBuffer message = new StringBuffer("Wrong parameter type for ").append(parameterDefinition.name()).append("( ").append(getName()).append(" ). Expected type: ").append(className).append(" actual type: ").append(obj.getClass().getCanonicalName());
                 throw new FlowExecutionException(message.toString());
+            }
+            */
+            if (obj!=null && obj instanceof String) {
+                Object convertedObj = this.testTypeConvert(obj.toString(), cl);
+                if (convertedObj == null) {
+                    StringBuffer message = new StringBuffer("Wrong parameter type for ").append(parameterDefinition.name()).append("( ").append(getName()).append(" ). Expected type: ").append(className).append(" actual type: ").append(obj.getClass().getCanonicalName());
+                    throw new FlowExecutionException(message.toString());
+                } else {
+                    ctx.put(parameterDefinition.name(), convertedObj);
+                }
             }
         } catch (ClassNotFoundException e) {
 
@@ -259,6 +270,18 @@ public class CustomNode extends WorkflowNode {
 
     }
 
+    public <T> T testTypeConvert(String val, Class<T> type) {
+        T t = null;
+        try {
+            Constructor<T> constructor = type.getConstructor(String.class);
+            constructor.setAccessible(true);
+            t = constructor.newInstance(val);
+        } catch (Exception e) {
+            logger.warn("{} convert to {} error",val, type.getName());
+        }finally {
+            return t;
+        }
+    }
 
     /**
      * Returns name of executable class

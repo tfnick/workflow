@@ -21,10 +21,12 @@ import java.util.*;
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.neuro4j.workflow.FlowContext;
 import org.neuro4j.workflow.WorkflowRequest;
+import org.neuro4j.workflow.common.ExpressionException;
 import org.neuro4j.workflow.common.FlowExecutionException;
 import org.neuro4j.workflow.loader.f4j.SWFConstants;
 import org.neuro4j.workflow.utils.JsonUtil;
 import org.neuro4j.workflow.utils.RegexUtil;
+import org.neuro4j.workflow.utils.ScriptEvalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,14 +151,14 @@ public class WorkflowNode {
 		} else if(source.startsWith(SWFConstants.GR_VARIABLE_SYMBOL_START)
 				&& source.endsWith(SWFConstants.GR_VARIABLE_SYMBOL_END)){
 			//${v1.v2} -> v1.v2
-			source = source.replaceFirst(SWFConstants.GR_VARIABLE_SYMBOL_START,"").replace(SWFConstants.GR_VARIABLE_SYMBOL_END,"");
+			source = source.replace(SWFConstants.GR_VARIABLE_SYMBOL_START,"").replace(SWFConstants.GR_VARIABLE_SYMBOL_END,"");
 			obj = ctx.get(source);
 			ctx.put(target, obj);
 			return;
 			// 4) GR extend #{a:1,b:2}
 		} else if (source.startsWith(SWFConstants.GR_MAP_SYMBOL_START) && source.endsWith(SWFConstants.GR_MAP_SYMBOL_END)) {
-			source = source.replaceFirst(SWFConstants.GR_MAP_SYMBOL_START_REGEX, "");
 
+			source = source.replace(SWFConstants.GR_MAP_SYMBOL_START_REGEX, "");
 			List<String> variables = RegexUtil.getStringList(source,SWFConstants.GR_VARIABLE_SYMBOL_REGEX, null);
 
 			if (variables != null) {
@@ -178,7 +180,7 @@ public class WorkflowNode {
 
 			Map<String,Object> objm = JsonUtil.jsonToObject(source, HashMap.class);
 			for (Map.Entry<String,Object> entry : objm.entrySet()) {
-				String key = entry.getKey();
+				//String key = entry.getKey();
 				Object val = entry.getValue();
 
 				if (val instanceof String) {
@@ -194,8 +196,38 @@ public class WorkflowNode {
 			}
 			ctx.put(target,objm);
 			return;
-			// 5) constants like 1 or "year" etc
-		} else{
+			// 5) %{${a.b} == 1 && ${age} > 19}
+		} else if(source.startsWith(SWFConstants.GR_EXPRESSION_SYMBOL_START) && source.endsWith(SWFConstants.GR_EXPRESSION_SYMBOL_END)){
+			source = source.replaceFirst(SWFConstants.GR_EXPRESSION_SYMBOL_START_REGEX,"");
+			source = source.substring(0, source.length() - 1);
+
+			List<String> variables = RegexUtil.getStringList(source,SWFConstants.GR_VARIABLE_SYMBOL_REGEX, null);
+
+			if (variables != null) {
+				for (String var : variables) {
+					String rVar = var.replaceFirst(SWFConstants.GR_VARIABLE_SYMBOL_START_REGEX,"").replace(SWFConstants.GR_VARIABLE_SYMBOL_END_REGEX,"");
+					Object val = ctx.get(rVar);
+					if (val == null) {
+						source = source.replace(var, "null");
+					} else {
+						if (val instanceof String) {
+							source = source.replace(var, "\"" + val + "\"");
+						} else {
+							source = source.replace(var, val.toString());
+						}
+					}
+				}
+			}
+
+			try {
+				obj = ScriptEvalUtil.eval(source);
+			} catch (ExpressionException e) {
+				logger.error(e.getMessage(), e);
+			}
+
+			ctx.put(target, obj);
+			// 6) constants like 1 or "year" etc
+		} else {
 			obj = source;
 			ctx.put(target,obj);
 			return;

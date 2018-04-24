@@ -16,7 +16,9 @@ public class WorkflowNodeTest {
         ctx.put("age",14);
         ctx.put("name","luoli");
         node.evaluateParameterValue("#{'age':${age},'multiAge':${age},'name':${name},'nullInt':${nullInt},'nullStr':${nullStr}}", "params", ctx);
-
         assert ctx.get("params") instanceof Map;
+        node.evaluateParameterValue("%{${age} > 10}", "params", ctx);
+        assert ctx.get("params") instanceof Boolean;
+
     }
 }
