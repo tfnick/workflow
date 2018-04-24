@@ -19,6 +19,7 @@ public class WorkflowNodeTest {
         assert ctx.get("params") instanceof Map;
         node.evaluateParameterValue("%{${age} > 10}", "params", ctx);
         assert ctx.get("params") instanceof Boolean;
-
+        node.evaluateParameterValue("%{${name.unknow} == false}", "params", ctx);
+        assert ctx.get("params") instanceof Boolean;
     }
 }

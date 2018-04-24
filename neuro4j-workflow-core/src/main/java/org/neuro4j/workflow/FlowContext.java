@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.neuro4j.workflow.utils.MapDotUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,12 +96,8 @@ public class FlowContext {
             if (obj != null)
             {
                 String utilKey = key.substring(pointIndex + 1);
-                try {
-                    obj = PropertyUtils.getProperty(obj, utilKey);
-                    return obj;
-                } catch (Exception e) {
-                	logger.error(e.getMessage(), e);
-                }
+                obj = MapDotUtil.drillBean(obj, utilKey);
+                return obj;
             } else {
                 return null;
             }
