@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Objects;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.neuro4j.workflow.FlowContext;
 import org.neuro4j.workflow.WorkflowRequest;
 import org.neuro4j.workflow.common.FlowExecutionException;
@@ -146,7 +147,14 @@ public class DecisionNode extends WorkflowNode {
                     request.setNextRelation(falseExit);
                     break;
                 }
-                
+                if (compValue instanceof Boolean) {
+                    if (!compValue.equals(decisionValue)) {
+                        request.setNextRelation(trueExit);
+                    } else {
+                        request.setNextRelation(falseExit);
+                    }
+                    break;
+                }
                 double numberValue = new Double(decisionValue.toString()).doubleValue();
                 double numberCompareValue = new Double(compValue.toString()).doubleValue();
 
@@ -197,21 +205,29 @@ public class DecisionNode extends WorkflowNode {
             case EQ:
                 decisionValue = fctx.get(decisionKey);
 
-                compValue = getComparisonValue(fctx);
+                compValue = getComparisonValue(fctx);//compValue maybe boolean or number
                 
                 if (compValue == null || decisionValue == null) {
                     request.setNextRelation(falseExit);
                     break;
                 }
-                
-                numberValue = new Double(decisionValue.toString()).doubleValue();
-                numberCompareValue = new Double(compValue.toString()).doubleValue();
 
-                if (numberValue == numberCompareValue)
-                {
-                    request.setNextRelation(trueExit);
-                } else {
-                    request.setNextRelation(falseExit);
+                if (compValue instanceof Boolean) {
+                    if (compValue.equals(decisionValue)) {
+                        request.setNextRelation(trueExit);
+                    } else {
+                        request.setNextRelation(falseExit);
+                    }
+                }else{
+                    numberValue = new Double(decisionValue.toString()).doubleValue();
+                    numberCompareValue = new Double(compValue.toString()).doubleValue();
+
+                    if (numberValue == numberCompareValue)
+                    {
+                        request.setNextRelation(trueExit);
+                    } else {
+                        request.setNextRelation(falseExit);
+                    }
                 }
                 break;
             case HAS_EL:

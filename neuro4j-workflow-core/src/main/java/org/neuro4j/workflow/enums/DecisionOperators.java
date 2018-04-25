@@ -22,8 +22,10 @@ public enum DecisionOperators {
     NEQ_STR(1, "!= (string)", false), 
     DEFINED(2, "defined", true), 
     UNDEFINED(3, "undefined", true), 
-    EMPTY_STR(4, "empty string", true), 
-    EQ(5, "==", false), 
+    EMPTY_STR(4, "empty string", true),
+    //支持数字和布尔
+    EQ(5, "==", false),
+    //支持数字和布尔
     NEQ(6, "!=", false), 
     HAS_EL(7, "has elements", true), 
     LESS(8, "<", false), 
