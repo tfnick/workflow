@@ -57,7 +57,7 @@ public class SWFConstants {
     public final static String GR_VARIABLE_SYMBOL_START_REGEX = "\\$\\{";
     public final static String GR_VARIABLE_SYMBOL_END = "}";
     public final static String GR_VARIABLE_SYMBOL_END_REGEX = "}";
-    public final static String GR_VARIABLE_SYMBOL_REGEX = "\\$\\{[\\.a-zA-Z0-9]+\\}";
+    public final static String GR_VARIABLE_SYMBOL_REGEX = "\\$\\{[\\.\\_a-zA-Z0-9]+\\}";
 
     public final static String GR_MAP_SYMBOL_START = "#{";
     public final static String GR_MAP_SYMBOL_START_REGEX = "#";
