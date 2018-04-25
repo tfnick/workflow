@@ -30,6 +30,8 @@ import org.neuro4j.workflow.utils.ScriptEvalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.neuro4j.workflow.loader.f4j.SWFConstants.QUOTES_SYMBOL;
+
 /**
  * Base class for executable nodes
  *
@@ -228,7 +230,14 @@ public class WorkflowNode {
 			ctx.put(target, obj);
 			// 6) constants like 1 or "year" etc
 		} else {
+			if (source != null && source instanceof String) {
+				source = source.trim();
+			}
 			obj = source;
+			// 7) string constants remove "
+			if (source != null && source.startsWith(QUOTES_SYMBOL) && source.endsWith(QUOTES_SYMBOL) && source.length() > 1) {
+				obj = source.substring(1, source.length() - 1);
+			}
 			ctx.put(target,obj);
 			return;
 		}
