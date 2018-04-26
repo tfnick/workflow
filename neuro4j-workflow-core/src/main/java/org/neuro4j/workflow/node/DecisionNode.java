@@ -24,6 +24,7 @@ import java.util.Objects;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.neuro4j.workflow.FlowContext;
 import org.neuro4j.workflow.WorkflowRequest;
+import org.neuro4j.workflow.common.ExpressionException;
 import org.neuro4j.workflow.common.FlowExecutionException;
 import org.neuro4j.workflow.enums.DecisionCompTypes;
 import org.neuro4j.workflow.enums.DecisionOperators;
@@ -34,9 +35,13 @@ public class DecisionNode extends WorkflowNode {
     private static final String NEXT_EXIT_RELATION = SWFConstants.NEXT_RELATION_NAME;
     private static final String FALSE_EXIT_RELATION = "FALSE";
 
+    private static final String _FALSE = "false";
+    private static final String _TRUE = "true";
+
     private DecisionOperators operator = null;
     private DecisionCompTypes compTypes = null;
     private String decisionKey = null;
+    //maybe bool number or "String" or ${a.b}
     private String comparisonKey = null;
 
     /**
@@ -139,7 +144,7 @@ public class DecisionNode extends WorkflowNode {
                     request.setNextRelation(trueExit);
                 }
                 break;
-            case NEQ:
+            case NEQ:// for bool or number
                 decisionValue = fctx.get(decisionKey);
                 compValue = getComparisonValue(fctx);
 
@@ -147,8 +152,9 @@ public class DecisionNode extends WorkflowNode {
                     request.setNextRelation(falseExit);
                     break;
                 }
-                if (compValue instanceof Boolean) {
-                    if (!compValue.equals(decisionValue)) {
+
+                if (compValue instanceof Boolean || isBoolStr(compValue)) {
+                    if (!Boolean.valueOf(compValue.toString()).equals(decisionValue)) {
                         request.setNextRelation(trueExit);
                     } else {
                         request.setNextRelation(falseExit);
@@ -212,8 +218,8 @@ public class DecisionNode extends WorkflowNode {
                     break;
                 }
 
-                if (compValue instanceof Boolean) {
-                    if (compValue.equals(decisionValue)) {
+                if (compValue instanceof Boolean || isBoolStr(compValue)) {
+                    if (Boolean.valueOf(compValue.toString()).equals(decisionValue)) {
                         request.setNextRelation(trueExit);
                     } else {
                         request.setNextRelation(falseExit);
@@ -267,6 +273,16 @@ public class DecisionNode extends WorkflowNode {
         return request.getNextWorkflowNode();
     }
 
+    private boolean isBoolStr(Object compValue) {
+        if (compValue == null) {
+            return false;
+        }
+        if (_FALSE.equalsIgnoreCase(compValue.toString()) || _TRUE.equalsIgnoreCase(compValue.toString())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     /**
      * @param fctx
      *        flow context
@@ -277,10 +293,24 @@ public class DecisionNode extends WorkflowNode {
         Object compValue = null;
         switch (compTypes) {
             case context:
-                compValue = fctx.get(comparisonKey);
+                if (comparisonKey.startsWith(SWFConstants.GR_VARIABLE_SYMBOL_START)
+                        && comparisonKey.endsWith(SWFConstants.GR_VARIABLE_SYMBOL_END)) {
+                    comparisonKey = comparisonKey.replace(SWFConstants.GR_VARIABLE_SYMBOL_START,"").replace(SWFConstants.GR_VARIABLE_SYMBOL_END,"");
+                    compValue = fctx.get(comparisonKey);
+                } else {
+                    //not allowed
+                    compValue = fctx.get(comparisonKey);
+                    //throw new RuntimeException("decision node's comparisonKey must like ${xxx} when get valve from context");
+                }
                 break;
             default:
-                compValue = comparisonKey;
+                if (comparisonKey.startsWith(SWFConstants.QUOTES_SYMBOL)
+                        && comparisonKey.endsWith(SWFConstants.QUOTES_SYMBOL)) {
+                    comparisonKey = comparisonKey.substring(1);
+                    compValue = comparisonKey.substring(0,comparisonKey.length() - 1);
+                } else {
+                    compValue = comparisonKey;
+                }
                 break;
         }
         return compValue;

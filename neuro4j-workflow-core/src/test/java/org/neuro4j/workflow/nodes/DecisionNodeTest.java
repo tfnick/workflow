@@ -42,7 +42,7 @@ public class DecisionNodeTest {
 	
 	@Test
 	public void testDecisionObjectEqlTrue(){
-		testDecisionNode(new Integer(5), new Integer(5), DecisionOperators.EQ, DecisionCompTypes.context, SWFConstants.NEXT_RELATION_NAME);
+		testDecisionNode(new Integer(5), 5,DecisionOperators.EQ, DecisionCompTypes.context, SWFConstants.NEXT_RELATION_NAME);
 	}
 	
 	@Test
@@ -66,6 +66,12 @@ public class DecisionNodeTest {
 	public void testDecisionObjectEqlFalseDiffClasses(){
 		// diff classes
 		testDecisionNode(new Integer(7), new String("7"), DecisionOperators.EQ, DecisionCompTypes.context, "NEXT");
+	}
+
+	@Test
+	public void testDecisionObjectEqFalse(){
+		// diff classes
+		testDecisionNode(false, false, DecisionOperators.EQ, DecisionCompTypes.context, "NEXT");
 	}
 	
 	@Test
@@ -189,7 +195,7 @@ public class DecisionNodeTest {
 		String uuid = UUID.randomUUID().toString() + "uuid";
 		DecisionNode node = new DecisionNode(name, uuid);
 		node.setOperator(DecisionOperators.HAS_EL);
-		node.setComparisonKey("var2");
+		node.setComparisonKey("${var2}");
 
 		node.setCompTypes(DecisionCompTypes.context);
 		String endName = UUID.randomUUID().toString();
@@ -227,7 +233,7 @@ public class DecisionNodeTest {
 		String uuid = UUID.randomUUID().toString() + "uuid";
 		DecisionNode node = new DecisionNode(name, uuid);
 
-		node.setComparisonKey("var2");
+		node.setComparisonKey("${var2}");
 		node.setCompTypes(DecisionCompTypes.context);
 		
 		
@@ -253,7 +259,7 @@ public class DecisionNodeTest {
 		String uuid = UUID.randomUUID().toString() + "uuid";
 		DecisionNode node = new DecisionNode(name, uuid);
 
-		node.setComparisonKey("var2");
+		node.setComparisonKey("${var2}");
 		node.setOperator(DecisionOperators.HAS_EL);
 		node.setCompTypes(DecisionCompTypes.context);
 		
@@ -276,7 +282,9 @@ public class DecisionNodeTest {
 		WorkflowRequest request = new WorkflowRequest();
 		request.addParameter("var1", var1);
 		request.addParameter("var2", var2);
-		
+		request.addParameter("var3", 5);
+		request.addParameter("var4", 7);
+
         WorkflowProcessor processor = new WorkflowProcessor(new ConfigBuilder());
 		
 		String name = UUID.randomUUID().toString() + "Name";
@@ -286,7 +294,7 @@ public class DecisionNodeTest {
 		DecisionNode  node = new DecisionNode(name, uuid);
 		node.setOperator(operator);
 		if (DecisionCompTypes.context.equals(compType)){
-			node.setComparisonKey("var2");			
+			node.setComparisonKey("${var2}");
 		} else {
 			node.setComparisonKey(var2.toString());			
 		}
@@ -325,7 +333,7 @@ public class DecisionNodeTest {
 		assertEquals(node.getCompTypes(), compType);
 		assertEquals(node.getDecisionKey(), "var1");
 		if (DecisionCompTypes.context.equals(compType)){
-			assertEquals(node.getComparisonKey(), "var2");			
+			assertEquals(node.getComparisonKey(), "${var2}");
 		} else {
 			assertEquals(node.getComparisonKey(), var2.toString());
 		}
