@@ -40,41 +40,35 @@ public class MapDotUtil {
 		}
 	}
 
-	private static Object _drill(Object parent, String[] sa, int ind) {
+	private static Object _drill(Object parent, String[] sa, int ind,final String dotProp) {
 		if(parent==null)return null;
 		String key = sa[ind];
 		if (ind == sa.length - 1) {
 			Object child = null;
 			try {
 				child = PropertyUtils.getProperty(parent, key);
-			} catch (IllegalAccessException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				System.out.println("can not find property " + key + " in expression " + dotProp);
 			}
 			return child;
 		} else {
 			Object child = null;
 			try {
 				child = PropertyUtils.getProperty(parent, key);
-			} catch (IllegalAccessException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				System.out.println("can not find property " + key + " in expression " + dotProp);
 			}
 			if (child == null) {
 				return null;
 			} else {
-				return _drill(child, sa, ind + 1);
+				return _drill(child, sa, ind + 1,dotProp);
 			}
 		}
 	}
 
-	public static Object drillBean(Object parent, String dotProp) {
+	public static Object drillBean(Object parent, final String dotProp) {
 		if (parent == null || dotProp == null) {
 			return null;
 		}
@@ -87,17 +81,14 @@ public class MapDotUtil {
 			Object child = null;
 			try {
 				child = PropertyUtils.getProperty(parent, key);
-			} catch (IllegalAccessException e) {
+			} catch (Exception e){
 				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				System.out.println("can not find property " + key + " in expression " + dotProp);
 			}
 			return child;
 		}
 		String[] sa = dotProp.split("\\.");
-		return _drill(parent, sa, 0);
+		return _drill(parent, sa, 0,dotProp);
 	}
 
 	public static void main(String[] args) {
