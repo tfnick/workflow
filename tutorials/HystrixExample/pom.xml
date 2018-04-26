@@ -37,12 +37,12 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.neuro4j</groupId>
+			<groupId>org.gr.neuro4j</groupId>
 			<artifactId>spring-context-adapter</artifactId>
 			<version>${org.neuro4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.neuro4j</groupId>
+			<groupId>org.gr.neuro4j</groupId>
 			<artifactId>netflix-hystrix-adapter</artifactId>
 			<version>${org.neuro4j.version}</version>
 		</dependency>

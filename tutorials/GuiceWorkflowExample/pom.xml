@@ -21,7 +21,7 @@
 			<version>3.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.neuro4j</groupId>
+			<groupId>org.gr.neuro4j</groupId>
 			<artifactId>guice-workflow-adapter</artifactId>
 			<version>${org.neuro4j.version}</version>
 		</dependency>

@@ -171,7 +171,8 @@ public class WorkflowNode {
 						source = source.replace(var, "null");
 					} else {
 						if (val instanceof String) {
-							source = source.replace(var, "\"" + val + "\"");
+							//source = source.replace(var, "\"" + val + "\"");
+							source = source.replace(var, val.toString());
 						} else {
 							source = source.replace(var, val.toString());
 						}

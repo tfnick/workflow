@@ -306,8 +306,7 @@ public class DecisionNode extends WorkflowNode {
             default:
                 if (comparisonKey.startsWith(SWFConstants.QUOTES_SYMBOL)
                         && comparisonKey.endsWith(SWFConstants.QUOTES_SYMBOL)) {
-                    comparisonKey = comparisonKey.substring(1);
-                    compValue = comparisonKey.substring(0,comparisonKey.length() - 1);
+                    compValue = comparisonKey.substring(1,comparisonKey.length() - 1);
                 } else {
                     compValue = comparisonKey;
                 }

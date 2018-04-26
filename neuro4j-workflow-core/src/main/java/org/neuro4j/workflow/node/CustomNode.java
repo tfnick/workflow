@@ -29,6 +29,7 @@ import org.neuro4j.workflow.WorkflowRequest;
 import org.neuro4j.workflow.common.FlowExecutionException;
 import org.neuro4j.workflow.common.ParameterDefinition;
 import org.neuro4j.workflow.common.ParameterDefinitionList;
+import org.neuro4j.workflow.loader.f4j.SWFConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,6 +205,10 @@ public class CustomNode extends WorkflowNode {
 		String mappedValue = getOutParameter(originalName);
 		if (mappedValue != null && !mappedValue.equalsIgnoreCase(originalName)) {
 			Object obj = ctx.remove(originalName);
+            if (mappedValue.startsWith(SWFConstants.QUOTES_SYMBOL) &&
+                    mappedValue.endsWith(SWFConstants.QUOTES_SYMBOL)) {
+                mappedValue = mappedValue.substring(1, mappedValue.length() - 1);
+            }
 			ctx.put(mappedValue, obj);
 			return mappedValue;
 		}

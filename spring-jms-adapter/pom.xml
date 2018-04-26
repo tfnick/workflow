@@ -13,12 +13,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.neuro4j</groupId>
+			<groupId>org.gr.neuro4j</groupId>
 			<artifactId>neuro4j-workflow-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.neuro4j</groupId>
+			<groupId>org.gr.neuro4j</groupId>
 			<artifactId>spring-context-adapter</artifactId>
 			<version>${project.version}</version>
 		</dependency>

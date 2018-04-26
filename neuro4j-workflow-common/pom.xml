@@ -12,7 +12,7 @@
 	<artifactId>neuro4j-workflow-common</artifactId>
   <dependencies>
         <dependency>
-        	<groupId>org.neuro4j</groupId>
+        	<groupId>org.gr.neuro4j</groupId>
         	<artifactId>neuro4j-workflow-core</artifactId>
         	<version>${project.version}</version>
         </dependency>     
