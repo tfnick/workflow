@@ -215,7 +215,9 @@ public class WorkflowNode {
 					} else {
 						if (val instanceof String) {
 							source = source.replace(var, "\"" + val + "\"");
-						} else {
+						} else if (val instanceof Map) {
+							source = source.replace(var, "\"" + val + "\"");
+						} else {//like Integer Boolean Double Float etc
 							source = source.replace(var, val.toString());
 						}
 					}
